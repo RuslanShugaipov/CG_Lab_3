@@ -16,10 +16,10 @@ namespace Lab_3
         Transformation t;
         private static double angleX = 0, angleY = 0;
 
-        private static Matrix point00 = new Matrix(new float[1, 3] { { 0f, -300f, 0f } });
-        private static Matrix point01 = new Matrix(new float[1, 3] { { 300f, 0f, 0f } });
-        private static Matrix point10 = new Matrix(new float[1, 3] { { 0f, 0f, 300f } });
-        private static Matrix point11 = new Matrix(new float[1, 3] { { 150f, -150f, 150f } });
+        private static Matrix point00 = new Matrix(new float[1, 3] { { 0f, -150f, 0f } });
+        private static Matrix point01 = new Matrix(new float[1, 3] { { 150f, 0f, 0f } });
+        private static Matrix point10 = new Matrix(new float[1, 3] { { 0f, 0f, 150f } });
+        private static Matrix point11 = new Matrix(new float[1, 3] { { 75f, -75f, 75f } });
 
         public Form1()
         {
@@ -35,13 +35,13 @@ namespace Lab_3
 
         private void button1_Click(object sender, EventArgs e)
         {
-            angleX = angleX == 360 ? 0 : angleX + 20;
+            angleX = angleX == 360 ? 0 : angleX + 10;
             draw_surface(angleX, t.rotationX);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            angleY = angleY == 360 ? 0 : angleY + 20;
+            angleY = angleY == 360 ? 0 : angleY + 10;
             draw_surface(angleY, t.rotationY);
         }
 
@@ -85,6 +85,11 @@ namespace Lab_3
             point01R = func(point01, angle);
             point10R = func(point10, angle);
             point11R = func(point11, angle);
+
+            point00 = (angle == 0 || angle == 360) ? func(point00, 0) : func(point00, 10);
+            point01 = (angle == 0 || angle == 360) ? func(point01, 0) : func(point01, 10);
+            point10 = (angle == 0 || angle == 360) ? func(point10, 0) : func(point10, 10);
+            point11 = (angle == 0 || angle == 360) ? func(point11, 0) : func(point11, 10);
 
             List<Matrix> points = biLin(
                 point00R,
