@@ -45,6 +45,11 @@ namespace Lab_3
             draw_surface(angleY, t.rotationY);
         }
 
+        private void Draw_Line(Matrix point1, Matrix point2, Graphics g, Pen pen)
+        {
+            g.DrawLine(pen, point1[0, 0], point1[0, 1], point2[0, 0], point2[0, 1]);
+        }
+
         private List<Matrix> biLin(Matrix point00, Matrix point01, Matrix point10, Matrix point11)
         {
             List<Matrix> points = new List<Matrix>();
@@ -71,10 +76,10 @@ namespace Lab_3
             g.Clear(pictureBox1.BackColor);
             pictureBox1.Invalidate();
 
-            PointF point00R = t.toIsometric(point00);
-            PointF point01R = t.toIsometric(point01);
-            PointF point10R = t.toIsometric(point10);
-            PointF point11R = t.toIsometric(point11);
+            Matrix point00R = t.toIsometric(point00);
+            Matrix point01R = t.toIsometric(point01);
+            Matrix point10R = t.toIsometric(point10);
+            Matrix point11R = t.toIsometric(point11);
 
             point00R = func(point00, angle);
             point01R = func(point01, angle);
@@ -82,10 +87,10 @@ namespace Lab_3
             point11R = func(point11, angle);
 
             List<Matrix> points = biLin(
-                new Matrix(new float[1, 3] { { point00R.X, point00R.Y, point00[0, 2] } }),
-                new Matrix(new float[1, 3] { { point01R.X, point01R.Y, point01[0, 2] } }),
-                new Matrix(new float[1, 3] { { point10R.X, point10R.Y, point10[0, 2] } }),
-                new Matrix(new float[1, 3] { { point11R.X, point11R.Y, point11[0, 2] } }));
+                point00R,
+                point01R,
+                point10R,
+                point11R);
 
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
@@ -93,36 +98,27 @@ namespace Lab_3
             Pen red_pen = new Pen(Color.Red);
             Pen black_pen = new Pen(Color.Black);
 
-            PointF axis_point = new PointF(0, -height / 2);
+            Matrix axis_point = new Matrix(new float[1, 3] { { 0, -height / 2, 0 } });
             g.TranslateTransform(width / 2, height / 2);
 
             for (int i = 1; i < points.Count(); ++i)
             {
-                g.DrawLine(red_pen, t.toIsometric(new Matrix(new float[1, 3] { { points[i - 1][0, 0], points[i - 1][0, 1], points[i - 1][0, 2] } })),
-                   t.toIsometric(new Matrix(new float[1, 3] { { points[i][0, 0], points[i][0, 1], points[i][0, 2] } })));
+                Draw_Line(t.toIsometric(points[i - 1]), t.toIsometric(points[i]), g, red_pen);
             }
 
-            //Axis
-            g.DrawLine(black_pen, new PointF(0, 0), axis_point);
-            g.DrawLine(black_pen, new PointF(0, 0), t.rotationZ(new Matrix(new float[1, 3] { { axis_point.X, axis_point.Y, 0 } }), 120));
-            g.DrawLine(black_pen, new PointF(0, 0), t.rotationZ(new Matrix(new float[1, 3] { { axis_point.X, axis_point.Y, 0 } }), -120));
+            //Axis Y
+            Draw_Line(new Matrix(new float[1, 2] { { 0, 0 } }), axis_point, g, black_pen);
+            //Axis Z
+            Draw_Line(new Matrix(new float[1, 2] { { 0, 0 } }), t.rotationZ(axis_point, 120), g, black_pen);
+            //Axis X
+            Draw_Line(new Matrix(new float[1, 2] { { 0, 0 } }), t.rotationZ(axis_point, -120), g, black_pen);
 
-            g.DrawLine(red_pen, t.toIsometric(new Matrix(new float[1, 3] { { point00R.X, point00R.Y, 0f } })),
-               t.toIsometric(new Matrix(new float[1, 3] { { point01R.X, point01R.Y, 0f } })));
-            g.DrawLine(red_pen, t.toIsometric(new Matrix(new float[1, 3] { { point01R.X, point01R.Y, 0f } })),
-               t.toIsometric(new Matrix(new float[1, 3] { { point11R.X, point11R.Y, 150f } })));
-            g.DrawLine(red_pen, t.toIsometric(new Matrix(new float[1, 3] { { point11R.X, point11R.Y, 150f } })),
-               t.toIsometric(new Matrix(new float[1, 3] { { point10R.X, point10R.Y, 300f } })));
-            g.DrawLine(red_pen, t.toIsometric(new Matrix(new float[1, 3] { { point10R.X, point10R.Y, 300f } })),
-               t.toIsometric(new Matrix(new float[1, 3] { { point00R.X, point00R.Y, 0f } })));
-
-            point00 = new Matrix(new float[1, 3] { { func(point00, angle).X, func(point00, angle).Y, point00[0, 2] } });
-            point01 = new Matrix(new float[1, 3] { { func(point01, angle).X, func(point01, angle).Y, point01[0, 2] } });
-            point10 = new Matrix(new float[1, 3] { { func(point10, angle).X, func(point10, angle).Y, point10[0, 2] } });
-            point11 = new Matrix(new float[1, 3] { { func(point11, angle).X, func(point11, angle).Y, point11[0, 2] } });
+            Draw_Line(t.toIsometric(point00R), t.toIsometric(point01R), g, red_pen);
+            Draw_Line(t.toIsometric(point01R), t.toIsometric(point11R), g, red_pen);
+            Draw_Line(t.toIsometric(point11R), t.toIsometric(point10R), g, red_pen);
+            Draw_Line(t.toIsometric(point10R), t.toIsometric(point00R), g, red_pen);
         }
 
-
-        public delegate PointF Rotation(Matrix axis_point, double angle);
+        public delegate Matrix Rotation(Matrix axis_point, double angle);
     }
 }

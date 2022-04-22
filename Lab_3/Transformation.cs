@@ -23,7 +23,7 @@ namespace Lab_3
             return instance;
         }
 
-        public PointF rotationX(Matrix point, double angle)
+        public Matrix rotationX(Matrix point, double angle)
         {
             angle = -angle * (Math.PI / 180);
 
@@ -43,10 +43,10 @@ namespace Lab_3
                     new_point[0, i] += _point[0, j] * rotationX[j, i];
                 }
             }
-            return new PointF(new_point[0, 0], new_point[0, 1]);
+            return new_point;
         }
 
-        public PointF rotationY(Matrix point, double angle)
+        public Matrix rotationY(Matrix point, double angle)
         {
             angle = -angle * (Math.PI / 180);
 
@@ -66,10 +66,10 @@ namespace Lab_3
                     new_point[0, i] += _point[0, j] * rotationY[j, i];
                 }
             }
-            return new PointF(new_point[0, 0], new_point[0, 1]);
+            return new_point;
         }
 
-        public PointF rotationZ(Matrix point, double angle)
+        public Matrix rotationZ(Matrix point, double angle)
         {
             angle = -angle * (Math.PI / 180);
 
@@ -89,10 +89,10 @@ namespace Lab_3
                     new_point[0, i] += _point[0, j] * rotationZ[j, i];
                 }
             }
-            return new PointF(new_point[0, 0], new_point[0, 1]);
+            return new_point;
         }
 
-        public PointF toIsometric(Matrix point)
+        public Matrix toIsometric(Matrix point)
         {
             double angleY = -45 * (Math.PI / 180);
             double angleX = -35.264 * (Math.PI / 180);
@@ -113,7 +113,7 @@ namespace Lab_3
                     new_point[0, i] += _point[0, j] * rotationYX[j, i];
                 }
             }
-            return new PointF(new_point[0, 0], new_point[0, 1]);
+            return new_point;
         }
     }
 }
